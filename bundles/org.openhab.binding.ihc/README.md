@@ -209,3 +209,10 @@ end
 ### Thing status
 
 Check thing status for errors.
+
+### Troubleshooting notes
+In some cases you might get 'Can't open connection to controller javax.net.ssl.SSLHandshakeException: No appropriate protocol (protocol is disabled or cipher suites are inappropriate)' message in your logs. Message will keep repeating every second and IHC binding won't be able to establish proper connection to IHC controller. That happens due to some disabled ciphers on Java or operation system level. 
+You should look into `java.security` file, search for `jdk.tls.disabledAlgorithms` and see if TLSv1 is listed there. 
+Another option is too have a look into `/etc/crypto-policies/back-ends/java.config` and also check  `jdk.tls.disabledAlgorithms` - some recent updtaes on Fedora & CentOS put TLSv1 and TLSv1.1 and - therefore - IHC binding can't negotiate ciphers to establish conection to IHC controller.
+In both cases - remove any TLSv1 strings and restart openhab2
+More info - on https://community.openhab.org/t/solved-oh2-ihc-and-java-1-8/90152/7
